@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 9th Monthsary</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #f5e6d3 50%, #ffe4e1 100%);
+            min-height: 100%;
+            overflow-x: hidden;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+                    width: 100%;
+                    height: 100px;
+                    border-radius: 3px;
+                    overflow: hidden;
+            color: #d63384;
+            margin-bottom: 30px;
+                .polaroid-image img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    object-position: center;
+                }
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 40px auto;
+            max-width: 90vw;
+            padding: 20px;
+        }
+
+        .time-unit {
+            background: rgba(255,255,255,0.9);
+            padding: 25px 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            min-width: 120px;
+            text-align: center;
+            transform: scale(1);
+            transition: transform 0.3s ease;
+        }
+
+        .time-unit:hover {
+            transform: scale(1.05);
+        }
+
+        .time-number {
+            font-size: 4.5rem;
+            font-weight: bold;
+            color: #d63384;
+            display: block;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .time-label {
+            font-size: 1.2rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        .cake-container {
+            display: none;
+            text-align: center;
+            animation: popIn 1s ease-out;
+            cursor: pointer;
+            margin: 40px 0;
+        }
+
+        .cake {
+            width: 200px;
+            height: 150px;
+            background: #8B4513;
+            border-radius: 10px 10px 50px 50px;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .cake::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            right: 10px;
+            height: 40px;
+            background: #FFB6C1;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .candles {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+
+        .candle {
+            width: 4px;
+            height: 25px;
+            background: #FFD700;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .flame {
+            width: 8px;
+            height: 10px;
+            background: radial-gradient(circle, #FFA500 30%, #FF4500 70%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: absolute;
+            top: -10px;
+            left: -2px;
+            animation: flicker 1.5s ease-in-out infinite alternate;
+        }
+
+        .polaroids {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .polaroid {
+            position: absolute;
+            width: 100px;
+            height: 150px; /* taller for portrait */
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            padding: 8px 8px 28px 8px;
+            opacity: 0;
+            transform: scale(0.5) rotate(0deg);
+            transition: all 0.8s ease-out;
+        }
+
+        .polaroid.show {
+            opacity: 1;
+            transform: scale(1) rotate(var(--rotation));
+        }
+
+        .polaroid-image {
+            width: 100%;
+            height: 120px; /* taller so image appears portrait */
+            border-radius: 3px;
+            overflow: hidden;
+            background: #f7f7f7;
+        }
+
+        .envelope-container {
+            display: none;
+            text-align: center;
+            margin-top: 50px; /* increase gap from cake/candles */
+            margin-bottom: 30px;
+            animation: slideUp 1s ease-out;
+        }
+
+        .envelope {
+            background: #FFE4E1;
+            width: 80px;
+            height: 50px;
+            border-radius: 5px;
+            position: relative;
+            margin: 0 auto 10px;
+            transform: rotate(0deg); /* ensure upright */
+            z-index: 20;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .envelope:hover {
+            transform: scale(1.05); /* keep upright but slightly scale */
+        }
+
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 30px solid #FFB6C1;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .envelope-text {
+            color: #d63384;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        .letter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .letter {
+            background: #FFF8DC;
+            max-width: 600px;
+            max-height: 80vh;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            overflow-y: auto;
+            position: relative;
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+        }
+
+        .letter-content {
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .letter h2 {
+            color: #d63384;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
+        .letter p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .signature {
+            text-align: right;
+            margin-top: 30px;
+            font-style: italic;
+            color: #d63384;
+        }
+
+        .close-letter {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkleFloat 2s ease-out forwards;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #ff6b95;
+            pointer-events: none;
+            opacity: 0;
+            animation: heartFloat 3s ease-out forwards;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            opacity: 0;
+            animation: confettiFall 4s ease-out forwards;
+        }
+
+        .celebration-sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #FFD700;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            filter: blur(1px);
+            animation: celebrationSparkle 2s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes flicker {
+            0% { transform: rotate(-2deg) scale(1); }
+            50% { transform: rotate(2deg) scale(1.1); }
+            100% { transform: rotate(-1deg) scale(0.9); }
+        }
+
+        @keyframes sparkleFloat {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-100px) scale(0.5); }
+        }
+
+        @keyframes heartFloat {
+            0% { 
+                opacity: 1;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2) rotate(20deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.8) rotate(-20deg) translate(100px, -100px);
+            }
+        }
+
+        @keyframes confettiFall {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(40vh) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(80vh) rotate(360deg);
+            }
+        }
+
+        @keyframes celebrationSparkle {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) translate(var(--tx), var(--ty));
+            }
+        }
+
+        /* Large tablets and desktop */
+        @media (min-width: 1024px) {
+            .container {
+                padding: 40px;
+            }
+            .title {
+                font-size: 4.5rem;
+                margin-bottom: 40px;
+            }
+            .time-unit {
+                min-width: 140px;
+            }
+            .time-number {
+                font-size: 5rem;
+            }
+        }
+
+        /* Tablets */
+        @media (max-width: 1023px) {
+            .title { 
+                font-size: 3.5rem;
+                line-height: 1.3;
+                padding: 0 20px;
+            }
+            .countdown {
+                gap: 20px;
+                padding: 15px;
+            }
+            .time-unit { 
+                padding: 20px;
+                min-width: 110px;
+            }
+            .time-number { 
+                font-size: 3.8rem;
+            }
+            .time-label {
+                font-size: 1.1rem;
+            }
+            .cake { width: 180px; height: 140px; }
+            .letter { padding: 25px; margin: 15px; }
+            .polaroid { width: 100px; height: 140px; padding: 8px 8px 24px 8px; }
+            .polaroid-image { height: 110px; }
+        }
+
+        /* Large phones */
+        @media (max-width: 767px) {
+            .title { 
+                font-size: 3rem;
+                line-height: 1.2;
+                padding: 0 15px;
+            }
+            .countdown {
+                gap: 15px;
+                padding: 10px;
+            }
+            .time-unit { 
+                padding: 15px;
+                min-width: 90px;
+            }
+            .time-number { 
+                font-size: 3.2rem;
+            }
+            .time-label {
+                font-size: 1rem;
+            }
+            .cake { width: 150px; height: 120px; }
+            .letter { padding: 20px; margin: 10px; }
+            .polaroid { width: 80px; height: 120px; padding: 6px 6px 18px 6px; }
+            .polaroid-image { height: 92px; }
+        }
+
+        /* Small phones */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            .title {
+                font-size: 2.5rem;
+                padding: 0 10px;
+            }
+            .countdown {
+                gap: 5px;
+                margin: 15px auto;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: center;
+                width: 100%;
+            }
+            .time-unit {
+                padding: 8px 5px;
+                min-width: auto;
+                width: 22%;
+                max-width: 80px;
+            }
+            .time-number {
+                font-size: 2rem;
+                margin-bottom: 2px;
+            }
+            .time-label {
+                font-size: 0.7rem;
+                letter-spacing: 0.5px;
+            }
+            .heart {
+                font-size: 16px;
+            }
+            .confetti {
+                width: 8px;
+                height: 8px;
+            }
+        }
+
+        /* Very small phones */
+        @media (max-width: 360px) {
+            .title {
+                font-size: 2.2rem;
+            }
+            .countdown {
+                gap: 8px;
+            }
+            .time-unit {
+                padding: 10px;
+                min-width: 65px;
+            }
+            .time-number {
+                font-size: 2.2rem;
+            }
+            .time-label {
+                font-size: 0.8rem;
+            }
+            .cake { width: 130px; height: 100px; }
+            .envelope { width: 70px; height: 45px; }
+            .polaroid { width: 70px; height: 100px; }
+        }
+        
+        /* Title hidden initially; will pop at countdown end */
+        .title {
+            font-size: 4rem;
+            color: #d63384;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+            font-weight: bold;
+            line-height: 1.2;
+            letter-spacing: 2px;
+            opacity: 0;
+            transform: translateY(20px) scale(0.98);
+            transition: opacity 0.6s ease, transform 0.6s ease, top 0.8s ease, left 0.8s ease;
+            position: relative;
+            z-index: 30;
+            text-align: center;
+        }
+
+        .title.pop {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            animation: popIn 0.6s ease-out;
+        }
+
+        /* When moving above the envelope we'll absolutely position the title
+           relative to the container so it can animate to coordinates above envelope */
+        .title.move-above {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 20%; /* default — will be adjusted in JS if needed */
+        }
+    </style>
+</head>
+<body>
+    <!-- Background audio (place your mp3 in the same folder or update the src) -->
+    <audio id="bgMusic" src="audio/monthsary_song.mp3" preload="auto" loop></audio>
+
+    <!-- Enable-sound overlay shown when autoplay is blocked -->
+    <div id="enableSoundOverlay" style="display:none; position:fixed; inset:0; background: rgba(0,0,0,0.6); z-index:2000; align-items:center; justify-content:center;">
+        <div style="background:white; padding:20px; border-radius:8px; text-align:center; max-width:90%;">
+            <p style="margin:0 0 12px; color:#d63384; font-weight:700;">Enable sound to hear the celebration 🎶</p>
+            <button id="enableSoundBtn" style="background:#ff69b4; color:white; border:none; padding:10px 16px; border-radius:6px; cursor:pointer;">Enable Sound</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="countdown-section" id="countdownSection">
+            <h1 class="title">HAPPY 9TH<br>MONTHSARY HAMYYY </h1>
+            <div class="countdown" id="countdown">
+                <div class="time-unit">
+                    <span class="time-number" id="days">00</span>
+                    <span class="time-label">Days</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-number" id="hours">00</span>
+                    <span class="time-label">Hours</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-number" id="minutes">00</span>
+                    <span class="time-label">Minutes</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-number" id="seconds">00</span>
+                    <span class="time-label">Seconds</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="envelope-container" id="envelopeContainer">
+            <div class="envelope" id="envelope"></div>
+            <p class="envelope-text">Tap to read 💌</p>
+        </div>
+
+        <div class="cake-container" id="cakeContainer">
+            <div class="cake" id="cake">
+                <div class="candles">
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                </div>
+            </div>
+            <p style="margin-top: 20px; color: #d63384; font-size: 1.1rem;">Click the cake to blow out the candles! 🎂</p>
+        </div>
+
+        <div class="polaroids" id="polaroids">
+            <div class="polaroid" style="--rotation: -15deg; top: 20%; left: 10%;">
+                 <div class="polaroid-image"><img src="images/memory1.jpg" alt="Memory 1"></div>
+            </div>
+            <div class="polaroid" style="--rotation: 10deg; top: 15%; right: 15%;">
+                 <div class="polaroid-image"><img src="images/memory2.jpg" alt="Memory 2"></div>
+            </div>
+            <div class="polaroid" style="--rotation: -8deg; top: 40%; left: 5%;">
+                 <div class="polaroid-image"><img src="images/memory3.jpg" alt="Memory 3"></div>
+            </div>
+            <div class="polaroid" style="--rotation: 12deg; top: 35%; right: 8%;">
+                 <div class="polaroid-image"><img src="images/memory4.jpg" alt="Memory 4"></div>
+            </div>
+            <div class="polaroid" style="--rotation: -20deg; bottom: 30%; left: 12%;">
+                 <div class="polaroid-image"><img src="images/memory5.jpg" alt="Memory 5"></div>
+            </div>
+            <div class="polaroid" style="--rotation: 18deg; bottom: 25%; right: 10%;">
+                 <div class="polaroid-image"><img src="images/memory6.jpg" alt="Memory 6"></div>
+            </div>
+            <div class="polaroid" style="--rotation: -5deg; bottom: 15%; left: 25%;">
+                 <div class="polaroid-image"><img src="images/memory7.jpg" alt="Memory 7"></div>
+            </div>
+            <div class="polaroid" style="--rotation: 8deg; bottom: 20%; right: 25%;">
+                 <div class="polaroid-image"><img src="images/memory8.jpg" alt="Memory 8"></div>
+            </div>
+            <div class="polaroid" style="--rotation: -12deg; bottom: 5%; left: 50%; transform: translateX(-50%);">
+                 <div class="polaroid-image"><img src="images/memory9.jpg" alt="Memory 9"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="letter-overlay" id="letterOverlay">
+        <div class="letter">
+            <button class="close-letter" id="closeLetter">&times;</button>
+            <div class="letter-content">
+                <h2>My Dearest Hamy,</h2>
+                <p>Happy 9th monthsary, my love! As I sit down to write this letter, my heart is overflowing with gratitude and affection for you. Can't believe it's been nine months since we become part of each other's lives. It feels like just yesterday when we first met on RP through Facebook back in 2022. I still remember the thrill of sending you messages on Sayout, trying to make you smile and comfort you.</p>
+                
+                <p>Our journey has had its ups and downs, especially when you needed time to heal from your past. I understand now how important it was for you to find yourself before we could fully embrace our love. And even when I made that foolish decision to break up, my heart ached at the thought of losing you. I was scared—scared of my own feelings, the weight of responsibilities, and the fear that I couldn't give you the life you deserve. But your strength and determination proved to me how much we truly mean to each other.</p>
+                
+                <p>I'll never forget the day you traveled all the way from Bulacan to Batangas, just to talk things over in person. That moment changed everything for me. Your willingness to fight for us showed me that our love is worth every challenge we face. I want you to know how deeply sorry I am for my doubts and fears. I promise to always communicate and never let those insecurities cloud our connection again.</p>
+                
+                <p>As I look towards our future, I dream of a life where we share the same roof, building memories together, supporting each other through thick and thin. I envision us traveling, laughing, and cherishing every moment—through joy and sadness, in every challenge and every triumph. You are my person, and there's no one else I'd rather share my life with.</p>
+                
+                <p>After I finish school, I can't wait for the day when we can truly start our journey together. I want nothing more than to create a beautiful future with you. You are my hamy, my partner(in crime), my ride or die, my best friend, and I will cherish you 'til the ends of the earth.</p>
+                
+                <p>Hamy i'll never get tired of saying this, I love you (more than you know). Thank you for being the one I get to spend my life with.</p>
+                
+                <div class="signature">
+                    Forever yours,<br>
+                    Jyeana 🥑
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set target date: October 24, 2025, 12:00 AM
+        const targetDate = new Date('2025-10-24T00:00:00').getTime();
+        let countdownFinished = false;
+        let candlesBlown = false;
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0 && !countdownFinished) {
+                countdownFinished = true;
+                showCake();
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+
+        function showCake() {
+            // Create celebration effects
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '💖';
+                heart.style.left = Math.random() * window.innerWidth + 'px';
+                heart.style.top = Math.random() * (window.innerHeight / 2) + 'px';
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 3000);
+            }
+
+            function createConfetti() {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.backgroundColor = ['#ff6b95', '#FFD700', '#7fff00', '#ff00ff'][Math.floor(Math.random() * 4)];
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 4000);
+            }
+
+            function createCelebrationSparkle() {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'celebration-sparkle';
+                sparkle.style.left = Math.random() * window.innerWidth + 'px';
+                sparkle.style.top = Math.random() * (window.innerHeight / 2) + 'px';
+                sparkle.style.setProperty('--tx', (Math.random() * 200 - 100) + 'px');
+                sparkle.style.setProperty('--ty', (Math.random() * 200 - 100) + 'px');
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 2000);
+            }
+
+            // Start celebration effects
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => createHeart(), i * 200);
+                setTimeout(() => createConfetti(), i * 150);
+                setTimeout(() => createCelebrationSparkle(), i * 100);
+            }
+
+            // Hide countdown but keep title visible
+            const countdownNumbers = document.getElementById('countdown');
+            if (countdownNumbers) countdownNumbers.style.display = 'none';
+
+            // Reveal title with pop animation
+            const titleEl = document.querySelector('.title');
+            titleEl.style.display = 'block';
+            titleEl.classList.add('pop');
+
+            // Add tap instruction
+            const tapInstruction = document.createElement('p');
+            tapInstruction.style.cssText = 'color: #d63384; font-size: 1.2rem; margin-top: 20px; opacity: 0; transition: opacity 0.5s;';
+            tapInstruction.textContent = 'Tap anywhere to continue...';
+            document.getElementById('countdownSection').appendChild(tapInstruction);
+            
+            // Show tap instruction after effects
+            setTimeout(() => {
+                tapInstruction.style.opacity = '1';
+            }, 3000);
+
+            // Wait for screen tap
+            function handleTap() {
+                document.getElementById('countdownSection').style.display = 'none';
+                document.getElementById('cakeContainer').style.display = 'block';
+                document.removeEventListener('click', handleTap);
+            }
+            document.addEventListener('click', handleTap);
+
+            // Try to play background music when celebration starts
+            const bgMusic = document.getElementById('bgMusic');
+            if (bgMusic) {
+                bgMusic.volume = 0.6; // moderate volume
+                const playPromise = bgMusic.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        // Autoplay blocked - show overlay asking user to enable sound
+                        const overlay = document.getElementById('enableSoundOverlay');
+                        if (overlay) overlay.style.display = 'flex';
+                    });
+                }
+            }
+        }
+
+        function blowCandles() {
+            if (candlesBlown) return;
+            candlesBlown = true;
+
+            // Hide flames
+            const flames = document.querySelectorAll('.flame');
+            flames.forEach(flame => {
+                flame.style.opacity = '0';
+            });
+
+            // Create sparkles
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createSparkle();
+                }, i * 100);
+            }
+
+            // Show polaroids after a delay
+            setTimeout(() => {
+                showPolaroids();
+            }, 1000);
+
+            // Show envelope immediately after candles are blown
+            document.getElementById('envelopeContainer').style.display = 'block';
+            
+            // Show polaroids after envelope
+            setTimeout(() => {
+                showPolaroids();
+            }, 1500);
+        }
+
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * window.innerWidth + 'px';
+            sparkle.style.top = Math.random() * window.innerHeight + 'px';
+            document.body.appendChild(sparkle);
+
+            setTimeout(() => {
+                sparkle.remove();
+            }, 2000);
+        }
+
+        function showPolaroids() {
+            const polaroids = document.querySelectorAll('.polaroid');
+            polaroids.forEach((polaroid, index) => {
+                setTimeout(() => {
+                    polaroid.classList.add('show');
+                }, index * 200);
+            });
+        }
+
+        function openLetter() {
+            document.getElementById('letterOverlay').style.display = 'flex';
+        }
+
+        function closeLetter() {
+            document.getElementById('letterOverlay').style.display = 'none';
+        }
+
+        // Event listeners
+        document.getElementById('cake').addEventListener('click', blowCandles);
+        document.getElementById('envelope').addEventListener('click', openLetter);
+        document.getElementById('closeLetter').addEventListener('click', closeLetter);
+        document.getElementById('letterOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLetter();
+            }
+        });
+
+        // Enable-sound overlay button handler
+        const enableBtn = document.getElementById('enableSoundBtn');
+        if (enableBtn) {
+            enableBtn.addEventListener('click', function() {
+                const overlay = document.getElementById('enableSoundOverlay');
+                const bgMusic = document.getElementById('bgMusic');
+                if (bgMusic) {
+                    bgMusic.volume = 0.0;
+                    bgMusic.loop = true;
+                    bgMusic.play().then(() => {
+                        fadeInAudio(bgMusic, 0.6, 1200);
+                    }).catch(() => {
+                        // If still failing, ignore
+                    });
+                }
+                if (overlay) overlay.style.display = 'none';
+            });
+        }
+
+        // Pause music when page is hidden
+        document.addEventListener('visibilitychange', function() {
+            const bgMusic = document.getElementById('bgMusic');
+            if (!bgMusic) return;
+            if (document.hidden) {
+                try { bgMusic.pause(); } catch (e) {}
+            }
+        });
+
+        // Try to start background music immediately so it plays while counting down.
+        // Browsers may block this; if so we'll show the enable overlay and retry on first user gesture.
+        function tryStartBgMusic(showOverlayOnFail = true) {
+            const bgMusic = document.getElementById('bgMusic');
+            if (!bgMusic) return;
+            bgMusic.loop = true;
+            // Start muted and fade in for a gentle introduction
+            bgMusic.volume = 0.0;
+            const p = bgMusic.play();
+            if (p !== undefined) {
+                p.then(() => {
+                    fadeInAudio(bgMusic, 0.6, 1200);
+                }).catch(() => {
+                    // Autoplay blocked
+                    if (showOverlayOnFail) {
+                        const overlay = document.getElementById('enableSoundOverlay');
+                        if (overlay) overlay.style.display = 'flex';
+                    }
+                });
+            }
+        }
+
+        // Fade in audio from current volume to target over duration(ms)
+        function fadeInAudio(audioEl, targetVolume = 0.6, duration = 1200) {
+            try {
+                const start = performance.now();
+                const initial = audioEl.volume || 0;
+                function step(now) {
+                    const elapsed = now - start;
+                    const t = Math.min(1, elapsed / duration);
+                    audioEl.volume = initial + (targetVolume - initial) * t;
+                    if (t < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            } catch (e) {
+                audioEl.volume = targetVolume;
+            }
+        }
+
+        // Try immediately (this may be blocked). If it is, retry once on the first user gesture.
+        tryStartBgMusic(true);
+        function onFirstUserGesture() {
+            tryStartBgMusic(false); // retry without showing overlay if it still fails
+            document.removeEventListener('click', onFirstUserGesture);
+            document.removeEventListener('touchstart', onFirstUserGesture);
+        }
+        document.addEventListener('click', onFirstUserGesture, { once: true });
+        document.addEventListener('touchstart', onFirstUserGesture, { once: true });
+
+        // Start countdown
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // For testing purposes - uncomment the line below to skip countdown
+        // setTimeout(showCake, 2000);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99318c6f852abc45',t:'MTc2MTIyNTgwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
