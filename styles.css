@@ -1,0 +1,559 @@
+/* Styles for Happy 9th Monthsary page (extracted from inline <style>) */
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Georgia', serif;
+    background: linear-gradient(135deg, #ffeef8 0%, #f5e6d3 50%, #ffe4e1 100%);
+    min-height: 100%;
+    overflow-x: hidden;
+}
+
+html {
+    height: 100%;
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+            width: 100%;
+            height: 100px;
+            border-radius: 3px;
+            overflow: hidden;
+    color: #d63384;
+    margin-bottom: 30px;
+        .polaroid-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    font-weight: bold;
+}
+
+.countdown {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 40px auto;
+    max-width: 90vw;
+    padding: 20px;
+}
+
+.time-unit {
+    background: rgba(255,255,255,0.9);
+    padding: 25px 35px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    min-width: 120px;
+    text-align: center;
+    transform: scale(1);
+    transition: transform 0.3s ease;
+}
+
+.time-unit:hover {
+    transform: scale(1.05);
+}
+
+.time-number {
+    font-size: 4.5rem;
+    font-weight: bold;
+    color: #d63384;
+    display: block;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.time-label {
+    font-size: 1.2rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+}
+
+.cake-container {
+    display: none;
+    text-align: center;
+    animation: popIn 1s ease-out;
+    cursor: pointer;
+    margin: 40px 0;
+}
+
+.cake {
+    width: 200px;
+    height: 150px;
+    background: #8B4513;
+    border-radius: 10px 10px 50px 50px;
+    position: relative;
+    margin: 0 auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.cake::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 10px;
+    right: 10px;
+    height: 40px;
+    background: #FFB6C1;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.candles {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+}
+
+.candle {
+    width: 4px;
+    height: 25px;
+    background: #FFD700;
+    border-radius: 2px;
+    position: relative;
+}
+
+.flame {
+    width: 8px;
+    height: 10px;
+    background: radial-gradient(circle, #FFA500 30%, #FF4500 70%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    position: absolute;
+    top: -10px;
+    left: -2px;
+    animation: flicker 1.5s ease-in-out infinite alternate;
+}
+
+.polaroids {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.polaroid {
+    position: absolute;
+    width: 100px;
+    height: 150px; /* taller for portrait */
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    padding: 8px 8px 28px 8px;
+    opacity: 0;
+    transform: scale(0.5) rotate(0deg);
+    transition: all 0.8s ease-out;
+}
+
+.polaroid.show {
+    opacity: 1;
+    transform: scale(1) rotate(var(--rotation));
+}
+
+.polaroid-image {
+    width: 100%;
+    height: 120px; /* taller so image appears portrait */
+    border-radius: 3px;
+    overflow: hidden;
+    background: #f7f7f7;
+}
+
+.envelope-container {
+    display: none;
+    text-align: center;
+    margin-top: 50px; /* increase gap from cake/candles */
+    margin-bottom: 30px;
+    animation: slideUp 1s ease-out;
+}
+
+.envelope {
+    background: #FFE4E1;
+    width: 80px;
+    height: 50px;
+    border-radius: 5px;
+    position: relative;
+    margin: 0 auto 10px;
+    transform: rotate(0deg); /* ensure upright */
+    z-index: 20;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.envelope:hover {
+    transform: scale(1.05); /* keep upright but slightly scale */
+}
+
+.envelope::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-bottom: 30px solid #FFB6C1;
+    border-radius: 5px 5px 0 0;
+}
+
+.envelope-text {
+    color: #d63384;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.letter-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.letter {
+    background: #FFF8DC;
+    max-width: 600px;
+    max-height: 80vh;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    overflow-y: auto;
+    position: relative;
+    font-family: 'Georgia', serif;
+    line-height: 1.6;
+}
+
+.letter-content {
+    color: #333;
+    font-size: 1rem;
+}
+
+.letter h2 {
+    color: #d63384;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+}
+
+.letter p {
+    margin-bottom: 20px;
+    text-align: justify;
+}
+
+.signature {
+    text-align: right;
+    margin-top: 30px;
+    font-style: italic;
+    color: #d63384;
+}
+
+.close-letter {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #999;
+}
+
+.sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #FFD700;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: sparkleFloat 2s ease-out forwards;
+}
+
+.heart {
+    position: absolute;
+    font-size: 20px;
+    color: #ff6b95;
+    pointer-events: none;
+    opacity: 0;
+    animation: heartFloat 3s ease-out forwards;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    opacity: 0;
+    animation: confettiFall 4s ease-out forwards;
+}
+
+.celebration-sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #FFD700;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    filter: blur(1px);
+    animation: celebrationSparkle 2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes flicker {
+    0% { transform: rotate(-2deg) scale(1); }
+    50% { transform: rotate(2deg) scale(1.1); }
+    100% { transform: rotate(-1deg) scale(0.9); }
+}
+
+@keyframes sparkleFloat {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-100px) scale(0.5); }
+}
+
+@keyframes heartFloat {
+    0% { 
+        opacity: 1;
+        transform: scale(0) rotate(0deg);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2) rotate(20deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.8) rotate(-20deg) translate(100px, -100px);
+    }
+}
+
+@keyframes confettiFall {
+    0% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(40vh) rotate(180deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(80vh) rotate(360deg);
+    }
+}
+
+@keyframes celebrationSparkle {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.5);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0) translate(var(--tx), var(--ty));
+    }
+}
+
+/* Large tablets and desktop */
+@media (min-width: 1024px) {
+    .container {
+        padding: 40px;
+    }
+    .title {
+        font-size: 4.5rem;
+        margin-bottom: 40px;
+    }
+    .time-unit {
+        min-width: 140px;
+    }
+    .time-number {
+        font-size: 5rem;
+    }
+}
+
+/* Tablets */
+@media (max-width: 1023px) {
+    .title { 
+        font-size: 3.5rem;
+        line-height: 1.3;
+        padding: 0 20px;
+    }
+    .countdown {
+        gap: 20px;
+        padding: 15px;
+    }
+    .time-unit { 
+        padding: 20px;
+        min-width: 110px;
+    }
+    .time-number { 
+        font-size: 3.8rem;
+    }
+    .time-label {
+        font-size: 1.1rem;
+    }
+    .cake { width: 180px; height: 140px; }
+    .letter { padding: 25px; margin: 15px; }
+    .polaroid { width: 100px; height: 140px; padding: 8px 8px 24px 8px; }
+    .polaroid-image { height: 110px; }
+}
+
+/* Large phones */
+@media (max-width: 767px) {
+    .title { 
+        font-size: 3rem;
+        line-height: 1.2;
+        padding: 0 15px;
+    }
+    .countdown {
+        gap: 15px;
+        padding: 10px;
+    }
+    .time-unit { 
+        padding: 15px;
+        min-width: 90px;
+    }
+    .time-number { 
+        font-size: 3.2rem;
+    }
+    .time-label {
+        font-size: 1rem;
+    }
+    .cake { width: 150px; height: 120px; }
+    .letter { padding: 20px; margin: 10px; }
+    .polaroid { width: 80px; height: 120px; padding: 6px 6px 18px 6px; }
+    .polaroid-image { height: 92px; }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+    .title {
+        font-size: 2.5rem;
+        padding: 0 10px;
+    }
+    .countdown {
+        gap: 5px;
+        margin: 15px auto;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        width: 100%;
+    }
+    .time-unit {
+        padding: 8px 5px;
+        min-width: auto;
+        width: 22%;
+        max-width: 80px;
+    }
+    .time-number {
+        font-size: 2rem;
+        margin-bottom: 2px;
+    }
+    .time-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.5px;
+    }
+    .heart {
+        font-size: 16px;
+    }
+    .confetti {
+        width: 8px;
+        height: 8px;
+    }
+}
+
+/* Very small phones */
+@media (max-width: 360px) {
+    .title {
+        font-size: 2.2rem;
+    }
+    .countdown {
+        gap: 8px;
+    }
+    .time-unit {
+        padding: 10px;
+        min-width: 65px;
+    }
+    .time-number {
+        font-size: 2.2rem;
+    }
+    .time-label {
+        font-size: 0.8rem;
+    }
+    .cake { width: 130px; height: 100px; }
+    .envelope { width: 70px; height: 45px; }
+    .polaroid { width: 70px; height: 100px; }
+}
+
+/* Title hidden initially; will pop at countdown end */
+.title {
+    font-size: 4rem;
+    color: #d63384;
+    margin-bottom: 30px;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+    font-weight: bold;
+    line-height: 1.2;
+    letter-spacing: 2px;
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+    transition: opacity 0.6s ease, transform 0.6s ease, top 0.8s ease, left 0.8s ease;
+    position: relative;
+    z-index: 30;
+    text-align: center;
+}
+
+.title.pop {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    animation: popIn 0.6s ease-out;
+}
+
+/* When moving above the envelope we'll absolutely position the title
+   relative to the container so it can animate to coordinates above envelope */
+.title.move-above {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 20%; /* default — will be adjusted in JS if needed */
+}
